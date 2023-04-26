@@ -1,0 +1,13 @@
+name: Do something
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  docker-test:
+    name: Run docker 
+    runs-on: ubuntu-22.04
+    steps:
+      - run: |
+          docker version
+
