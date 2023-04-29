@@ -3,6 +3,16 @@ entries:
   test:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-04-29T16:52:55.257214899Z"
+    description: A Helm chart for Kubernetes
+    digest: e4ee29c463f4b869d7ee4e7adb1502e2b3b6195bda7a5bf2b35dd2acd4e0e213
+    name: test
+    type: application
+    urls:
+    - https://github.com/cbarbian-sap/wf-test/releases/download/0.2.10/test-0.2.10.tgz
+    version: 0.2.10
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-04-29T16:45:47.153112822Z"
     description: A Helm chart for Kubernetes
     digest: fbbb65859d329d62ba048b5b3effd2177d0be82d3eeb9e1e9cf93c4635811b14
@@ -51,4 +61,4 @@ entries:
     urls:
     - https://cbarbian-sap.github.io/wf-test/test-0.2.2.tgz
     version: 0.2.2
-generated: "2023-04-29T16:45:47.15241763Z"
+generated: "2023-04-29T16:52:55.256464997Z"
