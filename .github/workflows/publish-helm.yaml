@@ -1,0 +1,71 @@
+name: Publish Helm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  publish-to-pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-22.04
+    env:
+      CHART_DIR: chart
+      CHART_NAME: test
+      CHART_VERSION: ${{ github.event.release.tag_name }}
+      CHART_REPO_URL: ${{ steps.pages.outputs.base_url }}
+    steps:
+    - uses: azure/setup-helm@v3
+      with:
+       version: v3.11.3 
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: helm-index
+        path: index
+    - name: Create package
+      run: |
+        helm package --version $CHART_VERSION $CHART_DIR
+    - name: Create index
+      run: |
+        helm repo index --url $CHART_REPO_URL --merge ./index/index.yaml .
+        mv index.yaml index
+        cd index
+        git add index.yaml
+        git commit -m "Release $CHART_VERSION"
+        git push
+    - name: Upload package
+      run: |
+        upload_url="${{ github.event.release.upload_url }}"
+        upload_url=${upload_url%%\{*\}}
+        file=$CHART_NAME-$CHART_VERSION.tgz
+        echo "Uploading $file to $upload_url ..."
+        curl -sSf \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Content-Type: $(file -b --mime-type $file)" \
+          --data-binary @$file \
+          "$upload_url?name=$(basename $file)"
+    - name: Upload index
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: index
+    - name: Publish index 
+      id: deployment
+      uses: actions/deploy-pages@v2
