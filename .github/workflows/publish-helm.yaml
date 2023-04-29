@@ -87,7 +87,7 @@ jobs:
       run: |
         helm --registry-config $RUNNER_TEMP/helm-config.json registry login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }} 
     - name: Upload package
-      run: |
+      run: |
         chart_name=$(yq .name $CHART_DIR/Chart.yaml)
         file=$chart_name-${{ github.event.release.tag_name }}.tgz
         helm --registry-config $RUNNER_TEMP/helm-config.json push $file oci://ghcr.io/${{ github.repository }}
