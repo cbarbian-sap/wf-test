@@ -4,6 +4,9 @@ on:
   release:
     types: [published]
 
+env:
+  CHART_DIR: chart
+
 defaults:
   run:
     shell: bash
@@ -19,11 +22,8 @@ jobs:
       cancel-in-progress: false
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.publish-index.outputs.page_url }}
     runs-on: ubuntu-22.04
-    env:
-      CHART_DIR: chart
-      CHART_NAME: test
     steps:
     - uses: azure/setup-helm@v3
       with:
@@ -36,7 +36,6 @@ jobs:
         ref: helm-index
         path: index
     - name: Setup Pages
-      id: pages
       uses: actions/configure-pages@v3
     - name: Create package
       run: |
@@ -55,7 +54,8 @@ jobs:
       run: |
         upload_url="${{ github.event.release.upload_url }}"
         upload_url=${upload_url%%\{*\}}
-        file=$CHART_NAME-${{ github.event.release.tag_name }}.tgz
+        chart_name=$(yq .name $CHART_DIR/Chart.yaml)
+        file=$chart_name-${{ github.event.release.tag_name }}.tgz
         echo "Uploading $file to $upload_url ..."
         curl -sSf \
           -H "Accept: application/vnd.github+json" \
@@ -68,5 +68,5 @@ jobs:
       with:
         path: index
     - name: Publish index 
-      id: deployment
+      id: publish-index 
       uses: actions/deploy-pages@v2
