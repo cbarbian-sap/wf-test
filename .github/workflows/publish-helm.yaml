@@ -71,4 +71,5 @@ jobs:
       with:
         path: index
     - name: Publish index 
+      id: deployment
       uses: actions/deploy-pages@v2
