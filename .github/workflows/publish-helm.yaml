@@ -73,6 +73,9 @@ jobs:
       uses: actions/deploy-pages@v2
 
   publish-to-packages:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-22.04
     steps:
     - uses: azure/setup-helm@v3
