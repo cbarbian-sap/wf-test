@@ -49,6 +49,8 @@ jobs:
         helm repo index --url ${{ steps.pages.outputs.base_url }} --merge ./index/index.yaml .
         mv index.yaml index
         cd index
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         git add index.yaml
         git commit -m "Release $CHART_VERSION"
         git push
