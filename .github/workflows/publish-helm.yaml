@@ -5,6 +5,7 @@ on:
     types: [published]
 
 env:
+  HELM_VERSION: v3.11.3
   CHART_DIR: chart
 
 defaults:
@@ -27,7 +28,7 @@ jobs:
     steps:
     - uses: azure/setup-helm@v3
       with:
-       version: v3.11.3 
+       version: ${{ env.HELM_VERSION }} 
     - name: Checkout
       uses: actions/checkout@v3
     - name: Checkout
@@ -42,7 +43,7 @@ jobs:
         helm package --version ${{ github.event.release.tag_name }} $CHART_DIR
     - name: Create index
       run: |
-        helm repo index --url ${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }} --merge ./index/index.yaml .
+        helm repo index --url ${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }} --merge ./index/index.yaml .
         mv index.yaml index
         cd index
         git config user.name github-actions
@@ -70,3 +71,23 @@ jobs:
     - name: Publish index 
       id: publish-index 
       uses: actions/deploy-pages@v2
+
+  publish-to-packages:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: azure/setup-helm@v3
+      with:
+       version: ${{ env.HELM_VERSION }} 
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Create package
+      run: |
+        helm package --version ${{ github.event.release.tag_name }} $CHART_DIR
+    - name: Login to the OCI registry
+      run: |
+        helm --registry-config $RUNNER_TEMP/helm-config.json registry login ghcr.io -u ${{ github.actor }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }} 
+    - name: Upload package
+      run: |
+        chart_name=$(yq .name $CHART_DIR/Chart.yaml)
+        file=$chart_name-${{ github.event.release.tag_name }}.tgz
+        helm --registry-config $RUNNER_TEMP/helm-config.json push $file oci://ghcr.io/${{ github.repository }}
