@@ -27,7 +27,6 @@ jobs:
       CHART_DIR: chart
       CHART_NAME: test
       CHART_VERSION: ${{ github.event.release.tag_name }}
-      CHART_REPO_URL: ${{ steps.pages.outputs.base_url }}
     steps:
     - uses: azure/setup-helm@v3
       with:
@@ -39,12 +38,15 @@ jobs:
       with:
         ref: helm-index
         path: index
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v3
     - name: Create package
       run: |
         helm package --version $CHART_VERSION $CHART_DIR
     - name: Create index
       run: |
-        helm repo index --url $CHART_REPO_URL --merge ./index/index.yaml .
+        helm repo index --url ${{ steps.pages.outputs.base_url }} --merge ./index/index.yaml .
         mv index.yaml index
         cd index
         git add index.yaml
@@ -67,5 +69,4 @@ jobs:
       with:
         path: index
     - name: Publish index 
-      id: deployment
       uses: actions/deploy-pages@v2
