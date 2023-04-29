@@ -4,21 +4,19 @@ on:
   release:
     types: [published]
 
-permissions:
-  contents: write 
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 defaults:
   run:
     shell: bash
 
 jobs:
   publish-to-pages:
+    permissions:
+      contents: write 
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -26,7 +24,6 @@ jobs:
     env:
       CHART_DIR: chart
       CHART_NAME: test
-      CHART_VERSION: ${{ github.event.release.tag_name }}
     steps:
     - uses: azure/setup-helm@v3
       with:
@@ -43,22 +40,22 @@ jobs:
       uses: actions/configure-pages@v3
     - name: Create package
       run: |
-        helm package --version $CHART_VERSION $CHART_DIR
+        helm package --version ${{ github.event.release.tag_name }} $CHART_DIR
     - name: Create index
       run: |
-        helm repo index --url ${{ steps.pages.outputs.base_url }} --merge ./index/index.yaml .
+        helm repo index --url {{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }} --merge ./index/index.yaml .
         mv index.yaml index
         cd index
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add index.yaml
-        git commit -m "Release $CHART_VERSION"
+        git commit -m "Release ${{ github.event.release.tag_name }}"
         git push
     - name: Upload package
       run: |
         upload_url="${{ github.event.release.upload_url }}"
         upload_url=${upload_url%%\{*\}}
-        file=$CHART_NAME-$CHART_VERSION.tgz
+        file=$CHART_NAME-${{ github.event.release.tag_name }}.tgz
         echo "Uploading $file to $upload_url ..."
         curl -sSf \
           -H "Accept: application/vnd.github+json" \
