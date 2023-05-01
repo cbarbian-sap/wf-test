@@ -16,6 +16,7 @@ jobs:
     - run: |
         cat > Dockerfile <<END
         FROM scratch
+        WORKDIR /
         COPY bin/out /out
         ENTRYPOINT ["/out"]
         END
