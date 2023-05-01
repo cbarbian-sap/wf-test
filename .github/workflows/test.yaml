@@ -8,6 +8,17 @@ jobs:
     name: Run docker 
     runs-on: ubuntu-22.04
     steps:
-      - run: |
-          docker version
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Go Build
+      run: |
+        go build -o out main.go
+    - run: |
+        cat > DockerFile <<END
+        FROM scratch
+        COPY out /out
+        ENTRYPOINT ["/out"]
+        END
+        docker build -t out:latest .
+        docker run --rm out:latest
 
