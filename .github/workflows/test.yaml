@@ -12,11 +12,11 @@ jobs:
       uses: actions/checkout@v3
     - name: Go Build
       run: |
-        go build -o out main.go
+        go build -o bin/out main.go
     - run: |
         cat > Dockerfile <<END
         FROM scratch
-        COPY out /out
+        COPY bin/out /out
         ENTRYPOINT ["/out"]
         END
         docker build -t out:latest .
