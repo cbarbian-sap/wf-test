@@ -14,7 +14,7 @@ jobs:
       run: |
         go build -o out main.go
     - run: |
-        cat > DockerFile <<END
+        cat > Dockerfile <<END
         FROM scratch
         COPY out /out
         ENTRYPOINT ["/out"]
