@@ -18,6 +18,7 @@ jobs:
         FROM scratch
         WORKDIR /
         COPY bin/out /out
+        USER 65532:65532
         ENTRYPOINT ["/out"]
         END
         docker build -t out:latest .
