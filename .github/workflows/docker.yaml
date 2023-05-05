@@ -49,9 +49,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           context: .
           cache-from: |
-            type=gha,scope=gha-${{ github.sha }}
+            type=gha,scope=sha-${{ github.sha }}
+            type=gha,scope=${{ github.ref_name }}
           cache-to: |
-            type=gha,scope=gha-${{ github.sha }},mode=max
+            type=gha,scope=sha-${{ github.sha }},mode=max
+            type=gha,scope=${{ github.ref_name }},mode=max
           file: sub/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
