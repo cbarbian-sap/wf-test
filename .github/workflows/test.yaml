@@ -14,5 +14,5 @@ jobs:
       run: |
         echo "*** ${{ github.ref }} ***"
         echo "*** ${{ github.ref_name }} ***"
-        echo "*** ${{ github.base_ref || "dummy" }} ***"
+        echo "*** ${{ github.base_ref || 'dummy' }} ***"
          
