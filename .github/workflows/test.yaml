@@ -26,12 +26,14 @@ jobs:
         new_semver=${new_version#v}
         higher_semver=$(echo -e "$old_semver\n$new_semver" | sort -r -n -t. -k1 -k2 -k3 | head -n1)
         if [ "$higher_semver" != "$new_semver" ]; then
-          echo "This is not the highest release; not updating helm chart"
+          echo "Target appVersion ($new_version) is not higher than current appVersion ($old_version); skipping update."
           exit 0
         fi
+        echo "Updating custom resource definitions (./chart/crds) ..."
         rm -rf chart/crds
         cp -r ../crds chart
-        yq -i '.appVersion = $new_version' chart/Chart.yaml
+        echo "Updating appVersion in ./chart/Chart.yaml (current: $old_version; target: $new_version) ..."
+        perl -pi -e "s#appVersion:.*#appVersion: $new_version#g" chart/Chart.yaml
         git config user.name "It wasn't me"
         git config user.email "bobo@doesnotexist.io"
         git add -A
