@@ -1,11 +1,8 @@
 name: Do something
-on:
-  push:
-    branches: [ main ]
 
-  pull_request:
-    branches:
-    - main
+on:
+  release:
+    types: [published]
 
 jobs:
   do-the-test:
@@ -22,8 +19,19 @@ jobs:
         token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
     - name: Do it
       run: |
-        cp xxx wf-test-2
         cd wf-test-2
+        old_version=$(yq .appVersion chart/Chart.yaml)
+        old_semver=${old_version#v}
+        new_version=${{ github.event.release.tag_name }}
+        new_semver=${new_version#v}
+        higher_semver=$(echo -e "$old_semver\n$new_semver" | sort -r -n -t. -k1 -k2 -k3 | head -n1)
+        if [ "$higher_semver" != "$new_semver" ]; then
+          echo "This is not the highest release; not updating helm chart"
+          exit 0
+        fi
+        rm -rf chart/crds
+        cp -r ../crds chart
+        yq -i '.appVersion = $new_version' chart/Chart.yaml
         git config user.name "It wasn't me"
         git config user.email "bobo@doesnotexist.io"
         git add -A
