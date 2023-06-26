@@ -23,8 +23,8 @@ jobs:
       run: |
         cp xxx wf-test-2
         cd wf-test-2
-        git config --user.name "It wasn't me"
-        git config --user.email "bobo@doesnotexist.io"
+        git config user.name "It wasn't me"
+        git config user.email "bobo@doesnotexist.io"
         git add -A
         git commit -m save
         git push
