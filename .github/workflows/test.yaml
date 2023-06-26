@@ -15,8 +15,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Checkout
-      repository: cbarbian-sap/wf-test-2
-      path: wf-test-2
+      uses: actions/checkout@v3
+      with: 
+        repository: cbarbian-sap/wf-test-2
+        path: wf-test-2
     - run: |
         cp xxx wf-test-2
         cd wf-test-2
