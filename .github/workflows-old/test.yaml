@@ -14,12 +14,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Checkout
-      repository: cbarbian-sap/wf-test-2
-      path: wf-test-2
-    - run: |
-        cp xxx wf-test-2
-        cd wf-test-2
-        git add -A
-        git commit -m save
-        git push
+    - name: Do it
+      run: |
+        netstat -lnpt
