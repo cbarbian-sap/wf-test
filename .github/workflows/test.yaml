@@ -33,9 +33,12 @@ jobs:
         rm -rf chart/crds
         cp -r ../crds chart
         echo "Updating appVersion in ./chart/Chart.yaml (current: $old_version; target: $new_version) ..."
-        perl -pi -e "s#appVersion:.*#appVersion: $new_version#g" chart/Chart.yaml
-        git config user.name "It wasn't me"
-        git config user.email "bobo@doesnotexist.io"
+        perl -pi -e "s#^appVersion:.*#appVersion: $new_version#g" chart/Chart.yaml
+        git config user.name "ERP4SME-DevOps-GitHub-Workflow-User"
+        git config user.email "ERP4SME_DevOps_GitHub_Workflow_User@sap.com"
         git add -A
-        git commit -m save
+        git commit -m "Update chart (triggered by operator release $new_version)" \
+          -m "Repository: ${{ github.repository }}" \
+          -m "Release: ${{ github.event.release.tag_name }}" \
+          -m "Commit: ${{ github.sha }}"
         git push
