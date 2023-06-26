@@ -19,7 +19,8 @@ jobs:
       with: 
         repository: cbarbian-sap/wf-test-2
         path: wf-test-2
-    - run: |
+    - name: Do it
+      run: |
         cp xxx wf-test-2
         cd wf-test-2
         git add -A
