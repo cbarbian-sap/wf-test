@@ -34,6 +34,10 @@ jobs:
         cp -r ../crds chart
         echo "Updating appVersion in ./chart/Chart.yaml (current: $old_version; target: $new_version) ..."
         perl -pi -e "s#^appVersion:.*#appVersion: $new_version#g" chart/Chart.yaml
+        if [ -z "$(git status --porcelain)" ]; then
+          echo "Nothing has changed; skipping update."
+          exit 0
+        fi
         git config user.name "ERP4SME-DevOps-GitHub-Workflow-User"
         git config user.email "ERP4SME_DevOps_GitHub_Workflow_User@sap.com"
         git add -A
