@@ -19,6 +19,7 @@ jobs:
       with: 
         repository: cbarbian-sap/wf-test-2
         path: wf-test-2
+        token: ${{ secrets.WORKFLOW_USER_GH_TOKEN }}
     - name: Do it
       run: |
         cp xxx wf-test-2
