@@ -7,6 +7,8 @@ on:
 env:
   CHART_REPOSITORY: cbarbian-sap/wf-test-2
   CHART_DIRECTORY: chart
+  WORKFLOW_USER_NAME: ERP4SME-DevOps-GitHub-Workflow-User
+  WORKFLOW_USER_EMAIL: 134080766+ERP4SME-DevOps-GitHub-Workflow-User@users.noreply.github.com
 
 jobs:
   do-the-test:
@@ -46,8 +48,8 @@ jobs:
           exit 0
         fi
 
-        git config user.name "ERP4SME-DevOps-GitHub-Workflow-User"
-        git config user.email "134080766+ERP4SME-DevOps-GitHub-Workflow-User@users.noreply.github.com"
+        git config user.name "${{ env.WORKFLOW_USER_NAME }}"
+        git config user.email "${{ env.WORKFLOW_USER_EMAIL }}"
         git add -A
         git commit -F- <<END
         Update chart (triggered by operator release $new_version)
