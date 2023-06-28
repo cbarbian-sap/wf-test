@@ -14,7 +14,7 @@ on:
 
 jobs:
   one:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     name: Job one
     outputs:
       var: ${{ steps.set.outputs.var }}
@@ -27,7 +27,7 @@ jobs:
         fi
 
   two:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     name: Job two
     needs: one
     # if: needs.one.outputs.var != ""
