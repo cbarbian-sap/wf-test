@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Job two
     needs: one
-    # if: needs.one.outputs.var != ""
+    if: needs.one.outputs.var != ""
     steps:
     - name: Get
       run: |
