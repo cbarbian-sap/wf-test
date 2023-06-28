@@ -22,8 +22,8 @@ jobs:
     - name: Set variable
       id: set
       run: |
-        if ${{ inputs.switch == 'yes' }}; then
-          echo "var=abc" >> $GITHUB_OUTPUT 
+        if [ "${{ inputs.switch }}" == true ]; then
+          echo "var=abc" >> $GITHUB_OUTPUT
         fi
 
   two:
