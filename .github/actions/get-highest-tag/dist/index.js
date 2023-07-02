@@ -18513,7 +18513,7 @@ async function run () {
   try {
     const prefix = core.getInput('prefix')
     const git = simpleGit()
-    tags = (await git.listRemote(['--tags']))
+    versions = (await git.listRemote(['--tags']))
       .trimEnd()
       .split('\n')
       .map(line => {
@@ -18530,11 +18530,9 @@ async function run () {
       })
       .sort(semver.compare)
       .reverse()
-      .map(version => {
-        return prefix + version
-      })
-    if (tags.length) {
-      core.setOutput('tag', tags[0])
+    if (versions.length) {
+      core.setOutput('tag', prefix + versions[0])
+      core.setOutput('version', versions[0])
     }
   } catch (error) {
     core.setFailed(error.message)

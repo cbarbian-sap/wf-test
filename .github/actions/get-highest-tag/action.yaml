@@ -6,6 +6,8 @@ inputs:
 outputs:
   tag:
     description: Highest tag (according to semver ordering)
+  version:
+    description: Highest version (i.e. found tag stripped by prefix)
 runs:
   using: node16
   main: dist/index.js
