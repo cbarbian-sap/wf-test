@@ -22,4 +22,5 @@ jobs:
     - id: print-tag
       name: Print tag
       run: |
-        echo "*** ${{ steps.get-tag.outputs.tag }} ***"
+        echo "*** tag: ${{ steps.get-tag.outputs.tag }} ***"
+        echo "*** version: ${{ steps.get-tag.outputs.version }} ***"
