@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Get highest tag
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
     - id: get-tag
       name: Get tag
       uses: ./.github/actions/get-highest-tag
