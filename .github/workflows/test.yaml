@@ -3,35 +3,21 @@ name: Do something
 on:
   workflow_dispatch:
     inputs:
-      switch:
-        description: 'Yes or no'
+      prefix: 
+        description: Tag prefix
         required: false
-        default: yes
-        type: choice
-        options:
-        - yes
-        - no
 
 jobs:
   one:
     runs-on: ubuntu-latest
-    name: Job one
-    outputs:
-      var: ${{ steps.set.outputs.var }}
+    name: Get highest tag
     steps:
-    - name: Set variable
-      id: set
+    - id: get-tag
+      name: Get tag
+      uses: .github/actions/get-highest-tag
+      with:
+        prefix: ${{ inputs.prefix }}
+    - id: print-tag
+      name: Print tag
       run: |
-        if [ "${{ inputs.switch }}" == true ]; then
-          echo "var=abc" >> $GITHUB_OUTPUT
-        fi
-
-  two:
-    runs-on: ubuntu-latest
-    name: Job two
-    needs: one
-    if: needs.one.outputs.var != '' 
-    steps:
-    - name: Get
-      run: |
-        echo "value: ${{ needs.one.outputs.var }}"
+        echo "*** ${{ steps.get-tag.outputs.tag }} ***"
