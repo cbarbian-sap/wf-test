@@ -14,7 +14,7 @@ jobs:
     steps:
     - id: get-tag
       name: Get tag
-      uses: .github/actions/get-highest-tag
+      uses: ./.github/actions/get-highest-tag
       with:
         prefix: ${{ inputs.prefix }}
     - id: print-tag
