@@ -5,7 +5,7 @@ const semver = require('semver')
 
 async function run () {
   try {
-    const prefix = new RegExp(core.getInput('prefix'))
+    const prefix = core.getInput('prefix')
     const git = simpleGit()
     tags = (await git.listRemote(['--tags']))
       .trimEnd()
