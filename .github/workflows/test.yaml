@@ -8,7 +8,7 @@ on:
         required: false
 
 env:
-  XXX: ${{ github.repository[1] }}
+  XXX: ${{ github.repository.split("-" }}
 
 jobs:
   one:
