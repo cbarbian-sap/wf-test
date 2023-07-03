@@ -7,6 +7,9 @@ on:
         description: Tag prefix
         required: false
 
+env:
+  XXX: ${{ github.repository[1] }}
+
 jobs:
   one:
     runs-on: ubuntu-latest
@@ -22,5 +25,6 @@ jobs:
     - id: print-tag
       name: Print tag
       run: |
+        echo "*** XXX: ${{ env.XXX }} ***"
         echo "*** tag: ${{ steps.get-tag.outputs.tag }} ***"
         echo "*** version: ${{ steps.get-tag.outputs.version }} ***"
