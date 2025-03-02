@@ -7,6 +7,8 @@ jobs:
   push:
     runs-on: ubuntu-latest
     name: Push to repository (b1)
+    permissions:
+      contents: write
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
