@@ -10,7 +10,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      ref: b1
+      with:
+        ref: b1
     - name: Push to repository
       run: |
         git config --global user.email "52255556+cbarbian-sap@users.noreply.github.com"
