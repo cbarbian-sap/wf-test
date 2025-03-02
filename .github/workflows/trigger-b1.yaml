@@ -1,0 +1,20 @@
+name: Trigger
+
+on:
+  workflow_dispatch:
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    name: Push to repository
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      ref b1
+    - name: Push to repository
+      run: |
+        git config --global user.email "52255556+cbarbian-sap@users.noreply.github.com"
+        git config --global user.name "cbarbian-sap"
+        git commit -m "trigger pipeline" --allow-empty
+        git push
+
