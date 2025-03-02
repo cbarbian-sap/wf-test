@@ -1,0 +1,80 @@
+name: Pipeline
+
+on:
+  push:
+    branches:
+    - b1
+    - b2
+  pull_request:
+    branches:
+    - b1
+    - b2 
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    name: Pipeline
+    steps:
+    - name: Get ref
+      id: get_ref
+      run: |
+        if [[ "${{ github.event_name }}" = "push" ]]; then
+          echo "ref=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+        elif [[ "${{ github.event_name }}" = "pull_request" ]]; then
+          echo "ref=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+        fi
+    - name: Checkout source repository
+      uses: actions/checkout@v3
+      with:
+        path: source
+    - name: Checkout target repository
+      uses: actions/checkout@v3
+      with:
+        repository: cbarbian-sap/component-test
+        ref: runtime
+        token: ${{ secrets.DEPLOY }}
+        path: deploy
+    - name: Deploy 
+      run: |
+        cd deploy
+        mkdir -p ${{ steps.get_ref.outputs.ref }}
+        cat > ${{ steps.get_ref.outputs.ref }}/job.yaml <<END
+        ---
+        apiVersion: batch.cs.sap.com/v1alpha1
+        kind: ReactiveJob
+        metadata:
+          name: ${{ steps.get_ref.outputs.ref }}
+        spec:
+          jobTemplate:
+            metadata:
+              annotations:
+                sha: "${{ github.sha }}"
+            spec:
+              template:
+                spec:
+                  containers:
+                  - image: alpine
+                    name: test
+                    command:
+                    - sleep
+                    - "300"
+                  restartPolicy: Never
+        END
+        git config --global user.email "52255556+cbarbian-sap@users.noreply.github.com"
+        git config --global user.name "cbarbian-sap"
+        git add -A
+        git commit -F - <<END
+        Deploy ${{ steps.get_ref.outputs.ref }} from ${{ github.sha }}
+        Context: mycluster/${{ steps.get_ref.outputs.ref }}
+        Reference: ${{ github.repository }}/${{ github.sha }}
+        END
+        git push
+    - name: Wait for deployment to complete
+      uses: sap-contributions/await-check-suites@master
+      with:
+        ref: ${{ github.sha }}
+        intervalSeconds: 10
+        timeoutSeconds: 600
+        appSlugFilter: deployment-status-receiver
+
+
