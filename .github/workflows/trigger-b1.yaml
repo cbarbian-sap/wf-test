@@ -14,6 +14,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: b1
+        token: ${{ secrets.TRIGGER }}
     - name: Push to repository
       run: |
         git config --global user.email "52255556+cbarbian-sap@users.noreply.github.com"
