@@ -67,6 +67,7 @@ jobs:
         Deploy ${{ steps.get_ref.outputs.ref }} from ${{ github.sha }}
         Context: mycluster/${{ steps.get_ref.outputs.ref }}
         Reference: ${{ github.repository }}/${{ github.sha }}
+        RequireExactCommit: true
         END
         git push
     - name: Wait for deployment to complete
