@@ -57,7 +57,7 @@ jobs:
                     name: test
                     command:
                     - sleep
-                    - "300"
+                    - "150"
                   restartPolicy: Never
         END
         git config --global user.email "52255556+cbarbian-sap@users.noreply.github.com"
