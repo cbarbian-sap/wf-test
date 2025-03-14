@@ -50,6 +50,7 @@ jobs:
               annotations:
                 sha: "${{ github.sha }}"
             spec:
+              backoffLimit: 1 
               template:
                 spec:
                   containers:
@@ -59,6 +60,7 @@ jobs:
                     - sleep
                     - "1800"
                   restartPolicy: Never
+                  terminationPeriodGraceSeconds: 5
         END
         git config --global user.email "52255556+cbarbian-sap@users.noreply.github.com"
         git config --global user.name "cbarbian-sap"
