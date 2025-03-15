@@ -58,7 +58,7 @@ jobs:
                     name: test
                     command:
                     - sleep
-                    - "300"
+                    - "90"
                   restartPolicy: Never
                   terminationGracePeriodSeconds: 5
         END
