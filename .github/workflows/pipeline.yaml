@@ -49,6 +49,9 @@ jobs:
             metadata:
               annotations:
                 sha: "${{ github.sha }}"
+                {{- if .foo }}
+                foo:  {{ .foo }}
+                {{- end }}
             spec:
               backoffLimit: 1 
               template:
