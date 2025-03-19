@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
     - b1
-    - b2 
+    - b2
 
 jobs:
   pipeline:
@@ -34,7 +34,7 @@ jobs:
         ref: runtime
         token: ${{ secrets.DEPLOY }}
         path: deploy
-    - name: Deploy 
+    - name: Deploy
       run: |
         cd deploy
         mkdir -p ${{ steps.get_ref.outputs.ref }}
