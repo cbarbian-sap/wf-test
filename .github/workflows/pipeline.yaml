@@ -49,7 +49,7 @@ jobs:
             metadata:
               annotations:
                 sha: "${{ github.sha }}"
-                {{- fail "oops" }}
+                {{- fail "oops" }}
                 {{- if .foo }}
                 foo:  {{ .foo }}
                 {{- end }}
